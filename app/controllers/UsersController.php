@@ -11,7 +11,11 @@ class UsersController extends \BaseController {
 	{
 		//displays all users
 		
-		return('Display all users.');
+		
+		$users = User::all();
+		return Response::json([
+			'data' => $users->toArray()
+		], 200);
 
 	}
 
@@ -50,7 +54,12 @@ class UsersController extends \BaseController {
 	{
 		//get a specific user by their id
 		
-		return('Display user by their id.');
+		$users = User::find($id);
+		
+		return Response::json([
+			'data' => $users->toArray()
+		], 200);
+
 	}
 
 
