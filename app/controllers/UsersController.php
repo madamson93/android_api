@@ -10,12 +10,7 @@ class UsersController extends \BaseController {
 	public function index()
 	{
 		//displays all users
-		
-		
-		$users = User::all();
-		return Response::json([
-			'data' => $users->toArray()
-		], 200);
+
 
 	}
 
@@ -28,8 +23,7 @@ class UsersController extends \BaseController {
 	public function create()
 	{
 		//
-		
-		return('Show form to create new user.');
+
 	}
 
 
@@ -53,12 +47,7 @@ class UsersController extends \BaseController {
 	public function show($id)
 	{
 		//get a specific user by their id
-		
-		$users = User::find($id);
-		
-		return Response::json([
-			'data' => $users->toArray()
-		], 200);
+
 
 	}
 
@@ -72,10 +61,9 @@ class UsersController extends \BaseController {
 	public function edit($id)
 	{
 		//
-	
-		return('Form to edit user.');
+
 	}
-	
+
 
 
 	/**
@@ -87,8 +75,7 @@ class UsersController extends \BaseController {
 	public function update($id)
 	{
 		//PATH request to update the user details by their id
-		
-		return('PATCH request to update user details by their id.');
+
 	}
 
 
@@ -101,8 +88,7 @@ class UsersController extends \BaseController {
 	public function destroy($id)
 	{
 		//delete a user from the table
-		
-		return('Delete a user from the table');
+
 	}
 
 
