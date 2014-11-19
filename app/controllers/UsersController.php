@@ -11,6 +11,16 @@ class UsersController extends \BaseController {
 	{
 		//displays all users
 
+		//assigns the users table to the $users variable
+		$users = DB::table('users')->get();
+
+		//loops through the users and returns them as a JSON response
+		foreach ($users as $user)
+		{
+			return Response::json([
+				'data'	=>	$users
+			], 200);
+		}
 
 	}
 
@@ -41,12 +51,14 @@ class UsersController extends \BaseController {
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param  int  $id
+	 * @param  int $id
 	 * @return Response
 	 */
 	public function show($id)
 	{
-		//get a specific user by their id
+		//will get a user by their email and password
+
+
 
 
 	}
@@ -74,7 +86,7 @@ class UsersController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		//PATH request to update the user details by their id
+		//PATH request to update the user details by their email, password reset?
 
 	}
 
@@ -87,7 +99,7 @@ class UsersController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		//delete a user from the table
+		//delete a user from the table, delete account
 
 	}
 
