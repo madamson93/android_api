@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Request;
+
 class UsersController extends \BaseController {
 
 	/**
@@ -9,32 +11,10 @@ class UsersController extends \BaseController {
 	 */
 	public function index()
 	{
-		//displays all users
-
-		//assigns the users table to the $users variable
-		$users = DB::table('users')->get();
-
-		//loops through the users and returns them as a JSON response
-		foreach ($users as $user)
-		{
-			return Response::json([
-				'data'	=>	$users
-			], 200);
-		}
-
+		return ('Route is functioning.');
 	}
 
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-
-	}
 
 
 	/**
@@ -44,8 +24,21 @@ class UsersController extends \BaseController {
 	 */
 	public function store()
 	{
-		//creates a new user
+		$user = new User;
+
+		$user->name = Request::get('name');
+		$user->email = Request::get('email');
+		$user->encrypted_password = Hash::make(Request::get('encrypted_password'));
+
+		$result = $user->save();
+
+		return Response::json(array(
+				'message' => 'User has been saved.'),
+			200
+		);
+
 	}
+
 
 
 	/**
