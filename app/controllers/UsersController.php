@@ -11,7 +11,8 @@ class UsersController extends \BaseController {
 	 */
 	public function index()
 	{
-		return ('Route is functioning.');
+		return ('Index route reached.');
+
 	}
 
 
@@ -30,9 +31,12 @@ class UsersController extends \BaseController {
 		$user->email = Request::get('email');
 		$user->encrypted_password = Hash::make(Request::get('encrypted_password'));
 
-		$result = $user->save();
+		//validation goes here
+
+		$user->save();
 
 		return Response::json(array(
+				'error' => false,
 				'message' => 'User has been saved.'),
 			200
 		);
@@ -49,23 +53,10 @@ class UsersController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		//will get a user by their email and password
+		//will get a user by their email and password, make sure they own the current resource
 
 
 
-
-	}
-
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
 
 	}
 
@@ -79,7 +70,7 @@ class UsersController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		//PATH request to update the user details by their email, password reset?
+		//PATCH request to update the user details by their email, password reset?
 
 	}
 

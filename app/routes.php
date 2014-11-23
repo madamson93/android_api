@@ -16,4 +16,7 @@ Route::get('/', function()
 	return View::make('hello');
 });
 
-Route::resource('users', 'UsersController');
+Route::group(array('prefix' => 'api/v1'), function()
+{
+	Route::resource('users', 'UsersController');
+});
