@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Request;
 use Sorskod\Larasponse\Larasponse;
+use AndroidLogin\Transformers\UserTransformer;
 
 class UsersController extends \BaseController {
 
@@ -13,15 +14,15 @@ class UsersController extends \BaseController {
 	}
 
 	/**
-	 * Display a listing of the resource.
+	 * Displays a list of all users in the database, transformed response with Fractal
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function getIndex()
 	{
 		$users = User::all();
 
-		return $this->fractal->collection($users, new \AndroidLogin\Transformers\UserTransformer());
+		return $this->fractal->collection($users, new UserTransformer());
 
 	}
 
@@ -29,17 +30,17 @@ class UsersController extends \BaseController {
 
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Creates a new user in the database, with the parameters passed in from the API request
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function postNewUser()
 	{
 		$user = new User;
 
 		$user->name = Request::get('name');
 		$user->email = Request::get('email');
-		$user->encrypted_password = Hash::make(Request::get('encrypted_password'));
+		$user->password = Hash::make(Request::get('password'));
 
 		//validation goes here
 
@@ -56,29 +57,36 @@ class UsersController extends \BaseController {
 
 
 	/**
-	 * Display the specified resource.
+	 * Displays a users details?
 	 *
-	 * @param  int $id
+	 * @param int $id
 	 * @return Response
 	 */
-	public function show($id)
+	public function getUserProfile()
 	{
-		//will get a user by their email and password, make sure they own the current resource
+		if (Auth::check())
+		{
+			$id = Auth::id();
+			$user = User::find($id);
 
-
-
+			return Response::json(array(
+					'error' => false,
+					'data' => $user->toArray()),
+				200
+			);
+		}
 
 	}
 
 
 
 	/**
-	 * Update the specified resource in storage.
+	 * Update the specified resource in storage, lets a user edit their account
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function patchUserDetails($id)
 	{
 		//PATCH request to update the user details by their email, password reset?
 
@@ -86,16 +94,58 @@ class UsersController extends \BaseController {
 
 
 	/**
-	 * Remove the specified resource from storage.
+	 * Remove the specified resource from storage, deletes a users account
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function deleteUser($id)
 	{
-		//delete a user from the table, delete account
+
 
 	}
 
+	/**
+	 * Logs a user into the applications using Auth
+	 *
+	 * @param $email
+	 * @param $password
+     */
+	public function postUserLogin()
+	{
+		//logs users in using authentication
+
+		$users = array(
+			'email' => Request::get('email'),
+			'password' => Request::get('password')
+
+		);
+
+
+		if (Auth::attempt($users)){
+			return Response::json(array(
+					'error' => false,
+					'message' => "Login successful"),
+				200
+			);
+		}
+
+		return Response::json(array(
+				'error' => true,
+				"message" => 'Incorrect e-mail/password, please try again.'),
+			401
+		);
+
+	}
+
+	/**
+	 * Method done if no other methods worked, default
+	 *
+	 * @param array $parameters
+	 */
+	public function missingMethod($parameters = array())
+	{
+
+	}
 
 }
