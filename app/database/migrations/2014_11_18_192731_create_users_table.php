@@ -18,9 +18,8 @@ class CreateUsersTable extends Migration {
                 
                 $table->string('name', 50);
                 $table->string('email');
-                $table->string('encrypted_password', 80);
-                $table->string('salt', 10);
-                
+                $table->string('password', 80);
+
                 $table->timestamps();
         });
 	}

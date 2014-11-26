@@ -1,8 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Request;
+use Sorskod\Larasponse\Larasponse;
 
 class UsersController extends \BaseController {
+
+	protected $fractal;
+
+	function __construct(Larasponse $fractal)
+	{
+		$this->fractal = $fractal;
+	}
 
 	/**
 	 * Display a listing of the resource.
@@ -13,11 +21,7 @@ class UsersController extends \BaseController {
 	{
 		$users = User::all();
 
-		return Response::json(array(
-				'error' => false,
-				'users' => $users->toArray()),
-			200
-		);
+		return $this->fractal->collection($users, new \AndroidLogin\Transformers\UserTransformer());
 
 	}
 

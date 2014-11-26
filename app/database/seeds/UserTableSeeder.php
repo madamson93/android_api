@@ -15,19 +15,19 @@ class UserTableSeeder extends Seeder {
         User::create(array(
             'name' => 'Hans Shephard',
             'email' => 'hans_shepard@booksmart.com',
-            'encrypted_password' => Hash::make('ZymAHana`U')
+            'password' => Hash::make('ZymAHana`U')
         ));
 
         User::create(array(
             'name' => 'Zana Sheaffer',
             'email' => 'zan_sheaf@freespace.com',
-            'encrypted_password' => Hash::make('%y*U=E^aSu')
+            'password' => Hash::make('%y*U=E^aSu')
         ));
 
         User::create(array(
             'name' => 'Martha Kammerer',
             'email' => 'martha-kam@webmine.com',
-            'encrypted_password' => Hash::make('GuVyTARu*a')
+            'password' => Hash::make('GuVyTARu*a')
         ));
     }
 
