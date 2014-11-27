@@ -1,0 +1,11 @@
+{
+  "name": "Android_Login",
+  "version": "1.0.0",
+  "description": "Login API for client side Android mobile devices",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Monique Adamson",
+  "license": "ISC"
+}
