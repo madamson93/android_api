@@ -65,15 +65,19 @@ class UsersController extends \BaseController {
 	{
 		if (Auth::check())
 		{
-			$id = Auth::id();
-			$user = User::find($id);
+//			$id = Auth::id();
+//			$user = User::find($id);
+//
+//			return Response::json(array(
+//					'error' => false,
+//					'data' => $user->toArray()),
+//				200
+//			);
 
-			return Response::json(array(
-					'error' => false,
-					'data' => $user->toArray()),
-				200
-			);
+
 		}
+
+		return ('TESTING');
 
 	}
 
