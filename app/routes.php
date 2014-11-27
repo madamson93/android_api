@@ -16,7 +16,7 @@ Route::get('/', function()
 	return View::make('hello');
 });
 
-Route::group(array('prefix' => 'api/', 'before' => 'auth.basic'), function(){
+Route::group(array('prefix' => 'api/'), function(){
 
 	Route::controller('users', 'UsersController');
 
