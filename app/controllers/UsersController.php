@@ -59,7 +59,6 @@ class UsersController extends \BaseController {
 	/**
 	 * Displays a users details?
 	 *
-	 * @param int $id
 	 * @return Response
 	 */
 	public function getUserProfile()
@@ -90,6 +89,32 @@ class UsersController extends \BaseController {
 	{
 		//PATCH request to update the user details by their email, password reset?
 
+		$id = Auth::id();
+		$user = User::find($id);
+
+		if(Request::get('email'))
+		{
+			$user->username = Request::get('email');
+		}
+
+		if(Request::get('name'))
+		{
+			$user->username = Request::get('name');
+		}
+
+		if(Request::get('password'))
+		{
+			$user->password = Request::get('password');
+		}
+
+		$user->save();
+
+		return Response::json(array(
+				'error' => false,
+				'message' => 'User profile updated.'),
+			200
+		);
+
 	}
 
 
@@ -99,18 +124,26 @@ class UsersController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function deleteUser($id)
+	public function deleteUser()
 	{
+		$id = Auth::id();
+		$user = User::find($id);
+
+		$user->delete;
+
+		return Response::json(array(
+				'error' => false,
+				'message' => 'User account deleted.'),
+			200
+		);
+
 
 
 	}
 
 	/**
 	 * Logs a user into the applications using Auth
-	 *
-	 * @param $email
-	 * @param $password
-     */
+	*/
 	public function postUserLogin()
 	{
 		//logs users in using authentication
