@@ -16,8 +16,14 @@ Route::get('/', function()
 	return View::make('hello');
 });
 
-Route::group(array('prefix' => 'api/'), function(){
+Route::group(array('prefix' => ''), function(){
 
 	Route::controller('users', 'UsersController');
+
+});
+
+Route::group(array('prefix' => '', 'before' => ''), function(){
+
+    Route::get('users/', array('uses' => 'UsersController@getIndex'));
 
 });

@@ -54,6 +54,11 @@ Route::filter('auth.basic', function()
 	return Auth::basic();
 });
 
+Route::filter('inGroup', function($route, $request, $value)
+{
+	//authentication code here
+});
+
 /*
 |--------------------------------------------------------------------------
 | Guest Filter
