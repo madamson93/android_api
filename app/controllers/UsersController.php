@@ -6,6 +6,7 @@ use AndroidLogin\Transformers\UserTransformer;
 
 class UsersController extends \BaseController {
 
+
 	protected $fractal;
 
 	function __construct(Larasponse $fractal)
@@ -30,54 +31,136 @@ class UsersController extends \BaseController {
 
 
 	/**
-	 * Creates a new user in the database, with the parameters passed in from the API request
+	 * Creates a new user in the database
 	 *
 	 * @return Response
 	 */
 	public function postNewUser()
 	{
-		$user = new User;
+		try
+		{
+			$user = Sentry::createUser(array(
+				'first_name' => Request::get('first_name'),
+				'last_name' => Request::get('last_name'),
+				'email'     => Request::get('email'),
+				'password'  => Request::get('password'),
+				'activated' => true,
+			));
 
-		$user->name = Request::get('name');
-		$user->email = Request::get('email');
-		$user->password = Hash::make(Request::get('password'));
 
-		//validation goes here
+			$userGroup = Sentry::findGroupById(2);
+			$user->addGroup($userGroup);
 
-		$user->save();
+			return Response::json(array(
+					'error' => false,
+					'message' => 'User has been saved.'),
+				201
+			);
+		}
+		catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
+		{
+			echo 'Email address is required.';
+		}
+		catch (Cartalyst\Sentry\Users\PasswordRequiredException $e)
+		{
+			echo 'A password is required.';
+		}
+		catch (Cartalyst\Sentry\Users\UserExistsException $e)
+		{
+			echo 'A user with this login already exists.';
+		}
 
-		return Response::json(array(
-				'error' => false,
-				'message' => 'User has been saved.'),
-			200
-		);
+	}
+
+
+
+
+	/**
+	 * Creates a new administrator in the database
+	 *
+	 * @return Response
+	 */
+	public function postNewAdmin()
+	{
+		try
+		{
+			$user = Sentry::createUser(array(
+				'first_name' => Request::get('first_name'),
+				'last_name' => Request::get('last_name'),
+				'email'     => Request::get('email'),
+				'password'  => Request::get('password'),
+				'activated' => true,
+			));
+
+			$adminGroup = Sentry::findGroupById(1);
+			$user->addGroup($adminGroup);
+
+
+			return Response::json(array(
+					'error' => false,
+					'message' => 'User has been saved.'),
+				201
+			);
+		}
+		catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
+		{
+			echo 'Login field is required.';
+		}
+		catch (Cartalyst\Sentry\Users\PasswordRequiredException $e)
+		{
+			echo 'Password field is required.';
+		}
+		catch (Cartalyst\Sentry\Users\UserExistsException $e)
+		{
+			echo 'User with this login already exists.';
+		}
 
 	}
 
 
 
 	/**
-	 * Displays a users details?
+	 *
+	 * Logs a user into the applications using Auth
 	 *
 	 * @return Response
 	 */
-	public function getUserProfile()
+	public function postUserLogin()
 	{
-		if (Auth::check())
+		try
 		{
-//			$id = Auth::id();
-//			$user = User::find($id);
-//
-//			return Response::json(array(
-//					'error' => false,
-//					'data' => $user->toArray()),
-//				200
-//			);
+			$credentials = array(
+				'email' => Request::get('email'),
+				'password' => Request::get('password'),
+			);
 
+			// Authenticate the user
 
+			$user = Sentry::authenticate($credentials, false);
+
+			return Response::json(array(
+					'error' => false,
+					'message' => "Login successful"),
+				200
+			);
+		}
+		catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
+		{
+			echo 'Login field is required.';
+		}
+		catch (Cartalyst\Sentry\Users\PasswordRequiredException $e)
+		{
+			echo 'Password field is required.';
+		}
+		catch (Cartalyst\Sentry\Users\WrongPasswordException $e)
+		{
+			echo 'Wrong password, try again.';
+		}
+		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+			echo 'User could not be found.';
 		}
 
-		return ('TESTING');
 
 	}
 
@@ -85,11 +168,12 @@ class UsersController extends \BaseController {
 
 	/**
 	 * Update the specified resource in storage, lets a user edit their account
+	 * NEEDS WORK
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function patchUserDetails($id)
+	public function patchUserAccount($id)
 	{
 		//PATCH request to update the user details by their email, password reset?
 
@@ -122,13 +206,16 @@ class UsersController extends \BaseController {
 	}
 
 
+
+
 	/**
 	 * Remove the specified resource from storage, deletes a users account
+	 * NEEDS WORK
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function deleteUser()
+	public function deleteUserAccount()
 	{
 		$id = Auth::id();
 		$user = User::find($id);
@@ -145,35 +232,8 @@ class UsersController extends \BaseController {
 
 	}
 
-	/**
-	 * Logs a user into the applications using Auth
-	*/
-	public function postUserLogin()
-	{
-		//logs users in using authentication
-
-		$users = array(
-			'email' => Request::get('email'),
-			'password' => Request::get('password')
-
-		);
 
 
-		if (Auth::attempt($users)){
-			return Response::json(array(
-					'error' => false,
-					'message' => "Login successful"),
-				200
-			);
-		}
-
-		return Response::json(array(
-				'error' => true,
-				"message" => 'Incorrect e-mail/password, please try again.'),
-			401
-		);
-
-	}
 
 	/**
 	 * Method done if no other methods worked, default
@@ -183,6 +243,7 @@ class UsersController extends \BaseController {
 	public function missingMethod($parameters = array())
 	{
 
+		return('No other routes have been successful.');
 	}
 
 }

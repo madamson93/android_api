@@ -14,6 +14,11 @@ class DatabaseSeeder extends Seeder {
 		$this->call('UserTableSeeder');
 
 		$this->command->info('User table has been seeded.');
+
+		$this->call('GroupsTableSeeder');
+
+		$this->command->info('Group table has been seeded.');
+
 	}
 
 }
