@@ -7,7 +7,8 @@ class GroupsTableSeeder extends Seeder {
 		Sentry::createGroup(array(
 			'name'        => 'Administrator',
 			'permissions' => array(
-				"user.view" => 1,
+				"admin" => 1,
+				"users"	=> 1,
 			),
 		));
 
@@ -15,7 +16,8 @@ class GroupsTableSeeder extends Seeder {
 		Sentry::createGroup(array(
 			'name'        => 'User',
 			'permissions' => array(
-				"user.view" => 0,
+				"admin" => 0,
+				"users"	=> 1,
 			),
 		));
 	}
