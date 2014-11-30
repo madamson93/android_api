@@ -27,7 +27,23 @@ class UsersController extends \BaseController {
 
 	}
 
+	/**
+	 * Logs user out of the application
+	 *
+     */
+	public function getLogOut(){
 
+		if ( ! Sentry::check())
+		{
+			return('No user is logged in.');
+		}
+		else
+		{
+			Sentry::logout();
+			return('User successfully logged out.');
+		}
+
+	}
 
 
 	/**
@@ -129,14 +145,14 @@ class UsersController extends \BaseController {
 	{
 		try
 		{
-			$credentials = array(
+			$user = array(
 				'email' => Request::get('email'),
 				'password' => Request::get('password'),
 			);
 
 			// Authenticate the user
 
-			$user = Sentry::authenticate($credentials, false);
+			Sentry::authenticate($user, false);
 
 			return Response::json(array(
 					'error' => false,
@@ -243,7 +259,7 @@ class UsersController extends \BaseController {
 	public function missingMethod($parameters = array())
 	{
 
-		return('No other routes have been successful.');
+		return('Default - route has been unsuccessful.');
 	}
 
 }

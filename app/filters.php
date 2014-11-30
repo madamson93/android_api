@@ -54,10 +54,39 @@ Route::filter('auth.basic', function()
 	return Auth::basic();
 });
 
-Route::filter('inGroup', function($route, $request, $value)
+Route::filter('SignedIn', function()
 {
-	//authentication code here
+	if ( ! Sentry::check())
+	{
+		return('Please login or create an account.');
+	}
+
 });
+
+Route::filter('inGroupAdmin', function($route, $request)
+{
+	try
+	{
+		$user = Sentry::getUser();
+
+		$group = Sentry::findGroupByName('Administrator');
+
+		if( ! $user->inGroup($group))
+		{
+			return('You do not have access to this route.');
+		}
+	}
+	catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+	{
+		return('No user was found.');
+	}
+
+	catch (Cartalyst\Sentry\Groups\GroupNotFoundException $e)
+	{
+		return('No group was found by its name.');
+	}
+});
+// See more at: http://laravelsnippets.com/snippets/sentry-route-filters#sthash.wP0yRsmO.dpuf
 
 /*
 |--------------------------------------------------------------------------
