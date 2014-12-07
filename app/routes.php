@@ -22,7 +22,7 @@ Route::group(array('prefix' => '', 'before' => ''), function(){
 
 });
 
-Route::group(array('prefix' => '', 'before' => 'inGroupAdmin'), function(){
+Route::group(array('prefix' => '', 'before' => ''), function(){
 
     Route::get('users/', array('uses' => 'UsersController@getIndex'));
 

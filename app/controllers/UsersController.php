@@ -184,40 +184,44 @@ class UsersController extends \BaseController {
 
 	/**
 	 * Update the specified resource in storage, lets a user edit their account
-	 * NEEDS WORK
 	 *
-	 * @param  int  $id
+	 *
 	 * @return Response
 	 */
-	public function patchUserAccount($id)
+	public function putUserAccount()
 	{
-		//PATCH request to update the user details by their email, password reset?
+		//PUT request to update the user details by their email
 
-		$id = Auth::id();
-		$user = User::find($id);
-
-		if(Request::get('email'))
+		try
 		{
-			$user->username = Request::get('email');
-		}
+			if ( Sentry::check()) {
+				$user = Sentry::getUser();
 
-		if(Request::get('name'))
+				if (Request::get('email')) {
+					$user->username = Request::get('email');
+				}
+
+				if (Request::get('name')) {
+					$user->username = Request::get('name');
+				}
+
+				if (Request::get('password')) {
+					$user->password = Request::get('password');
+				}
+
+				$user->save();
+
+				return Response::json(array(
+						'error' => false,
+						'message' => 'User profile updated.'),
+					200
+				);
+			}
+
+		} catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
-			$user->username = Request::get('name');
+			echo 'User was not found.';
 		}
-
-		if(Request::get('password'))
-		{
-			$user->password = Request::get('password');
-		}
-
-		$user->save();
-
-		return Response::json(array(
-				'error' => false,
-				'message' => 'User profile updated.'),
-			200
-		);
 
 	}
 
@@ -226,25 +230,34 @@ class UsersController extends \BaseController {
 
 	/**
 	 * Remove the specified resource from storage, deletes a users account
-	 * NEEDS WORK
+	 *
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function deleteUserAccount()
 	{
-		$id = Auth::id();
-		$user = User::find($id);
 
-		$user->delete;
+		try
+		{
+			//checks a user is logged in
+			if ( Sentry::check()) {
+				$user = Sentry::getUser();
 
-		return Response::json(array(
-				'error' => false,
-				'message' => 'User account deleted.'),
-			200
-		);
+				//deletes the account
+				$user->delete;
 
+				return Response::json(array(
+						'error' => false,
+						'message' => 'User account deleted.'),
+					200
+				);
+			}
 
+		} catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+			echo 'User was not found.';
+		}
 
 	}
 
